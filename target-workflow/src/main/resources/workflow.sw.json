@@ -1,0 +1,47 @@
+{
+  "id": "target-workflow",
+  "version": "1.0",
+  "specVersion": "0.8.0",
+  "name": "target-workflow",
+  "description": "Target Workflow for the pooling events",
+  "start": "ListenEvent",
+  "events": [
+    {
+      "name": "fromPooling",
+      "type": "org.acme.sw.camel.pooling",
+      "source": "urn:camel-pooling"
+    }
+  ],
+  "functions": [
+    {
+      "name": "log",
+      "operation": "sysout:INFO",
+      "type": "custom"
+    }
+  ],
+  "states": [
+    {
+      "name": "ListenEvent",
+      "type": "event",
+      "onEvents": [
+        {
+          "eventRefs": [
+            "fromPooling"
+          ],
+          "actions": [
+            {
+              "name": "logEvent",
+              "functionRef": {
+                "refName": "log",
+                "arguments": {
+                  "message": "${ \"The name is \\(.profile.name)\" }"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "end": true
+    }
+  ]
+}
